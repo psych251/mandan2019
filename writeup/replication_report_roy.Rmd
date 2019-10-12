@@ -1,0 +1,121 @@
+---
+title: "Replication of Support for Resettling Refugees: The Role of Fixed Versus Growth Mind-Sets by Madan et. al. (2019, Psychological Science)"
+author: "Replication Author[s] (contact information)"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: false
+---
+
+<!-- Replication reports should all use this template to standardize reporting across projects.  These reports will be public supplementary materials that accompany the summary report(s) of the aggregate results. -->
+
+## Introduction
+
+For this projet, I plan to replicate Madan et. al.'s 2019 study, which explores the connection between a fixed versus growth mindset and how those mindsets impact an individual's openness to supporting refugees in their country. Though my research interests align more closely with the field of educational neuroscience, I am intrigued by the impact a growth mindset can have on student's learning. By replicating this study, I will be able to reflect more on the impact of mindset (growth or fixed) on an individuals openness to new people, cultures, and ways of thinking.  
+
+### Study Description
+
+The study being replicated explored the effect of mindset on an individual's support for refugees in their country. In a series of six experiments, the original authors examined the mindsets (growth or fixed) of individuals in the United States and United Kingdom and their views on if refugees are able to assimilate into a new culture and to what extent are refugees obligated to assimilate to a new society. I plan to replicate the first study, which leverages survey data to ascertain a participant's support for refugees based on their opinions on the type of person someone is, mindset regarding intelligence (fixed vs growth), and political leanings.
+
+#### Stimuli and Procedures
+
+Participants will be recruited through Amazon Mechanical Turk. Each participant will have to undergo a pre-screening to ensure that they meet two criteria:
+
+* are a United States Citizen
+* currently residing in the United States
+
+Once participants have been screened, they will read a breif paragraph outlining the  refugee resettlement policy of the United States announced by the president in September of 2016. They will then answer a four item questionaire to measure their support for resettling refugees and two eight item questionaires measuring their views on the type of person someone is and their mindsets regarding participants. Participants will be randomly assigned so that half of sample responds to the refugee measure first and half of the sample responds to the mindsets measure first. Finally, participants will respond to a three item survey measuring their political orientation. 
+
+#### Potential Challenges
+
+While replicating this study, I foresee the following challenges:
+
+* having a sufficient sample size to generate a sufficient effect size that also meets the bugetary criteria for this replication
+* having enough participants after excluding participants who do not meet the inclusion criteria
+* subjects not feeling as strongly about the current U.S refugee resettlement policy due to other political happenings moving into the public spotlight.
+
+### Links
+
+* [Project Repository](https://github.com/psych251/https://github.com/psych251/mandan2019/)
+* [Original Paper](https://github.com/psych251/mandan2019/blob/master/original_paper/mandan2019.pdf)
+
+## Methods
+
+### Power Analysis
+
+Original effect size, power analysis for samples to achieve 80%, 90%, 95% power to detect that effect size.  Considerations of feasibility for selecting planned sample size.
+
+### Planned Sample
+
+Planned sample size and/or termination rule, sampling frame, known demographics if any, preselection rules if any.
+
+### Materials
+
+All materials - can quote directly from original article - just put the text in quotations and note that this was followed precisely.  Or, quote directly and just point out exceptions to what was described in the original article.
+
+### Procedure	
+
+Can quote directly from original article - just put the text in quotations and note that this was followed precisely.  Or, quote directly and just point out exceptions to what was described in the original article.
+
+### Analysis Plan
+
+Can also quote directly, though it is less often spelled out effectively for an analysis strategy section.  The key is to report an analysis strategy that is as close to the original - data cleaning rules, data exclusion rules, covariates, etc. - as possible.  
+
+**Clarify key analysis of interest here**  You can also pre-specify additional analyses you plan to do.
+
+### Differences from Original Study
+
+Explicitly describe known differences in sample, setting, procedure, and analysis plan from original study.  The goal, of course, is to minimize those differences, but differences will inevitably occur.  Also, note whether such differences are anticipated to make a difference based on claims in the original article or subsequent published research on the conditions for obtaining the effect.
+
+### Methods Addendum (Post Data Collection)
+
+You can comment this section out prior to final report with data collection.
+
+#### Actual Sample
+  Sample size, demographics, data exclusions based on rules spelled out in analysis plan
+
+#### Differences from pre-data collection methods plan
+  Any differences from what was described as the original plan, or “none”.
+
+
+## Results
+
+
+### Data preparation
+
+Data preparation following the analysis plan.
+	
+```{r include=F}
+###Data Preparation
+
+####Load Relevant Libraries and Functions
+
+####Import data
+
+#### Data exclusion / filtering
+
+#### Prepare data for analysis - create columns etc.
+```
+
+### Confirmatory analysis
+
+The analyses as specified in the analysis plan.  
+
+*Side-by-side graph with original graph is ideal here*
+
+### Exploratory analyses
+
+Any follow-up analyses desired (not required).  
+
+## Discussion
+
+### Summary of Replication Attempt
+
+Open the discussion section with a paragraph summarizing the primary result from the confirmatory analysis and the assessment of whether it replicated, partially replicated, or failed to replicate the original result.  
+
+### Commentary
+
+Add open-ended commentary (if any) reflecting (a) insights from follow-up exploratory analysis, (b) assessment of the meaning of the replication (or not) - e.g., for a failure to replicate, are the differences between original and present study ones that definitely, plausibly, or are unlikely to have been moderators of the result, and (c) discussion of any objections or challenges raised by the current and original authors about the replication attempt.  None of these need to be long.
