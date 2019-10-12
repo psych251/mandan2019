@@ -1,6 +1,6 @@
 ---
 title: "Replication of Support for Resettling Refugees: The Role of Fixed Versus Growth Mind-Sets by Madan et. al. (2019, Psychological Science)"
-author: "Replication Author[s] (contact information)"
+author: "Ethan Roy ethanroy@stanford.edu"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   html_document:
@@ -39,7 +39,7 @@ While replicating this study, I foresee the following challenges:
 
 ### Links
 
-* [Project Repository](https://github.com/psych251/https://github.com/psych251/mandan2019/)
+* [Project Repository](https://github.com/psych251/mandan2019)
 * [Original Paper](https://github.com/psych251/mandan2019/blob/master/original_paper/mandan2019.pdf)
 
 ## Methods
