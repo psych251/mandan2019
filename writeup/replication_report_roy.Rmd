@@ -22,7 +22,7 @@ The study being replicated explored the effect of mindset on an individual's sup
 
 #### Stimuli and Procedures
 
-Participants will be recruited through Amazon Mechanical Turk. Each participant will have to undergo a pre-screening to ensure that they meet two criteria:
+Participants will be recruited through Amazon Mechanical Turk. Per the original study, participants will report some demographic information (gender, age, race). Each participant will have to undergo a pre-screening to ensure that they meet two criteria:
 
 * are a United States Citizen
 * currently residing in the United States
@@ -122,6 +122,9 @@ At this time in the replication I do not have any data to prepare and do not hav
 
 #### Prepare data for analysis - create columns etc.
 ```
+
+###Participant Demographics
+A brief analysis will be conducted on the demographic measures to get an understanding of the demographic makeup of the sample. Factors that will be looked at include gender, age, and race.
 
 ### Confirmatory analysis
 
