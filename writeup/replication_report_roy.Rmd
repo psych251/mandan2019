@@ -50,25 +50,48 @@ Original effect size, power analysis for samples to achieve 80%, 90%, 95% power 
 
 ### Planned Sample
 
-Planned sample size and/or termination rule, sampling frame, known demographics if any, preselection rules if any.
+The planned sample for this replication will be **[need to do power analysis]** participants based on the power analysis conducted above. Participants will be screened to ensure that they are citizens of the United States and currently residing in the United States.
 
 ### Materials
 
-All materials - can quote directly from original article - just put the text in quotations and note that this was followed precisely.  Or, quote directly and just point out exceptions to what was described in the original article.
+As quoted from original study:
+
+"We administered four items to measure participants’ support for resettling refugees, each measured on a 7-point scale: (a) “How much do you agree that the US should take in 110,000 refugees in the next 12 months?” (*strongly disagree to strongly agree*), (b) “How much do you support the policy that the US should take in 110,000 refugees in the next 12 months?” (*strongly against to strongly support*), (c) “Do you think that the United States is taking in too many refugees?” (reverse-coded; *definitely not to definitely yes*), and (d) “Do you think that the United States is taking in too few refugees?” (*definitely not to definitely yes*).
+
+We measured participants’ mind-sets about the kind of person someone is using an established eight-item scale (Levy et al., 1998; sample item: “The kind of person someone is, is something basic about them, and it can’t be changed very much”). We also measured participants’ mind-set about intelligence (fixed vs. growth) using the standard eight-item scale (Dweck, 2000; sample item: “People have a certain amount of intelligence, and they can’t really do much to change it”). For both scales, all items were scored such that higher numbers indicated stronger growth kind-of-person mind-sets or mind-sets about intelligence.
+
+Finally, because the question of accepting refugees is a highly politicized issue, we measured participants’ political orientation using three items, each measured on a 7-point scale ranging from *strongly conservative* to *strongly liberal* (Item 1), *strongly right* to *strongly left* (Item 2), and *strongly Republican* to *strongly Democrat* (Item 3)."
+
+The exact items, measures, and scales were used in this replication.
+
 
 ### Procedure	
 
-Can quote directly from original article - just put the text in quotations and note that this was followed precisely.  Or, quote directly and just point out exceptions to what was described in the original article.
+As quoted from original study: 
+
+"We presented participants with the following paragraph detailing the latest refugee resettlement policy of the United States at that time, which was announced by the U.S. president in September 2016:
+
+>The United States will strive to take in 110,000 refugees from around the world in the coming year, the White House said recently. This would be a nearly 30% increase from the number of refugees allowed in over the previous year. The 110,000 goal covers a 12-month period that starts October 2016 to September 2017. In the previous 12 months, the U.S. goal was to take in 85,000 refugees, and in the three years before that, the target was 70,000 refugees per year.
+
+Participants were then asked to respond to the three measures described in the [Materials]. Half of the participants were randomly assigned to respond to the resettling refugees measure first while the other half responded to the mindsets measures first. After responding to both of those measures, participants responded to the political orientation measures.
+
 
 ### Analysis Plan
 
-Can also quote directly, though it is less often spelled out effectively for an analysis strategy section.  The key is to report an analysis strategy that is as close to the original - data cleaning rules, data exclusion rules, covariates, etc. - as possible.  
+First, participants who are not U.S citizens or are U.S citizens living abroad will be excluded from the final sample. 
+
+Next, I will calculate descriptive statistics for each variable (kind of person mindsets, mindsets about intelligence, political orientation, and support for resettling refugees). 
+
+Then, per the original study:
+
+"[I will] conduct a linear regression with participants’ support for resettling refugees as the dependent measure and their kind-of-person mind-sets, mind-sets about intelligence, and political orientation as independent variables"
+ 
 
 **Clarify key analysis of interest here**  You can also pre-specify additional analyses you plan to do.
 
 ### Differences from Original Study
 
-Explicitly describe known differences in sample, setting, procedure, and analysis plan from original study.  The goal, of course, is to minimize those differences, but differences will inevitably occur.  Also, note whether such differences are anticipated to make a difference based on claims in the original article or subsequent published research on the conditions for obtaining the effect.
+To ensure stable correlations, the original study recruited 400 participants, even though their power analysis indicated they needed 94 participants. Due to budgetary constrains, this replication will likely have a much smaller sample size than the original. 
 
 ### Methods Addendum (Post Data Collection)
 
@@ -86,7 +109,7 @@ You can comment this section out prior to final report with data collection.
 
 ### Data preparation
 
-Data preparation following the analysis plan.
+At this time in the replication I do not have any data to prepare and do not have a clear picture of how the raw data look from MTurk. However, I will have to exclude any participants who do not meet the two inclusion criteria. Additionally, if MTurk does not provide a unique subect ID number for each participant, I will have to create a new entry for each item that assigns each participant a subject ID number. I will also have to gather the raw data into a long form dataframe so that they work well within the tidyverse. Once the data are in long form, I will have to re-label columns for each measure (support for resettling refugees, kind-of-person mind-sets, mind-sets about intelligence, and political orientation) so that I can group based on the type of measure and calculate the descritpive statistics for each measure.
 	
 ```{r include=F}
 ###Data Preparation
@@ -102,8 +125,10 @@ Data preparation following the analysis plan.
 
 ### Confirmatory analysis
 
-The analyses as specified in the analysis plan.  
+As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) has on participant's support for resettling refugees.
 
+
+Due to the nature of the regressions, the original paper has no figures. I could include a graph of the first linear model I build but I'm not sure how much value that would add to the replication. 
 *Side-by-side graph with original graph is ideal here*
 
 ### Exploratory analyses
