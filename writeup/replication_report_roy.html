@@ -12,7 +12,7 @@
 
 <meta name="author" content="Ethan Roy ethanroy@stanford.edu" />
 
-<meta name="date" content="2019-10-16" />
+<meta name="date" content="2019-10-18" />
 
 <title>Replication of Support for Resettling Refugees: The Role of Fixed Versus Growth Mind-Sets by Madan et. al. (2019, Psychological Science)</title>
 
@@ -1512,7 +1512,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Replication of Support for Resettling Refugees: The Role of Fixed Versus Growth Mind-Sets by Madan et. al. (2019, Psychological Science)</h1>
 <h4 class="author">Ethan Roy <a href="mailto:ethanroy@stanford.edu" class="email">ethanroy@stanford.edu</a></h4>
-<h4 class="date">October 16, 2019</h4>
+<h4 class="date">October 18, 2019</h4>
 
 </div>
 
@@ -1526,7 +1526,7 @@ div.tocify {
 <p>The study being replicated explored the effect of mindset on an individual’s support for refugees in their country. In a series of six experiments, the original authors examined the mindsets (growth or fixed) of individuals in the United States and United Kingdom and their views on if refugees are able to assimilate into a new culture and to what extent are refugees obligated to assimilate to a new society. I plan to replicate the first study, which leverages survey data to ascertain a participant’s support for refugees based on their opinions on the type of person someone is, mindset regarding intelligence (fixed vs growth), and political leanings.</p>
 <div id="stimuli-and-procedures" class="section level4">
 <h4>Stimuli and Procedures</h4>
-<p>Participants will be recruited through Amazon Mechanical Turk. Each participant will have to undergo a pre-screening to ensure that they meet two criteria:</p>
+<p>Participants will be recruited through Amazon Mechanical Turk. Per the original study, participants will report some demographic information (gender, age, race). Each participant will have to undergo a pre-screening to ensure that they meet two criteria:</p>
 <ul>
 <li>are a United States Citizen</li>
 <li>currently residing in the United States</li>
@@ -1576,17 +1576,18 @@ div.tocify {
 <blockquote>
 <p>The United States will strive to take in 110,000 refugees from around the world in the coming year, the White House said recently. This would be a nearly 30% increase from the number of refugees allowed in over the previous year. The 110,000 goal covers a 12-month period that starts October 2016 to September 2017. In the previous 12 months, the U.S. goal was to take in 85,000 refugees, and in the three years before that, the target was 70,000 refugees per year.</p>
 </blockquote>
-<p>Participants were then asked to respond to the three measures described in the <a href="#materials">Materials</a>.</p>
-<p>Can quote directly from original article - just put the text in quotations and note that this was followed precisely. Or, quote directly and just point out exceptions to what was described in the original article.</p>
+<p>Participants were then asked to respond to the three measures described in the <a href="#materials">Materials</a>. Half of the participants were randomly assigned to respond to the resettling refugees measure first while the other half responded to the mindsets measures first. After responding to both of those measures, participants responded to the political orientation measures.</p>
 </div>
 <div id="analysis-plan" class="section level3">
 <h3>Analysis Plan</h3>
-<p>Can also quote directly, though it is less often spelled out effectively for an analysis strategy section. The key is to report an analysis strategy that is as close to the original - data cleaning rules, data exclusion rules, covariates, etc. - as possible.</p>
-<p><strong>Clarify key analysis of interest here</strong> You can also pre-specify additional analyses you plan to do.</p>
+<p>First, participants who are not U.S citizens or are U.S citizens living abroad will be excluded from the final sample.</p>
+<p>Next, I will calculate descriptive statistics for each variable (kind of person mindsets, mindsets about intelligence, political orientation, and support for resettling refugees).</p>
+<p><strong>Key Analysis of Interest:</strong></p>
+<p>“[I will] conduct a linear regression with participants’ support for resettling refugees as the dependent measure and their kind-of-person mind-sets, mind-sets about intelligence, and political orientation as independent variables”</p>
 </div>
 <div id="differences-from-original-study" class="section level3">
 <h3>Differences from Original Study</h3>
-<p>Explicitly describe known differences in sample, setting, procedure, and analysis plan from original study. The goal, of course, is to minimize those differences, but differences will inevitably occur. Also, note whether such differences are anticipated to make a difference based on claims in the original article or subsequent published research on the conditions for obtaining the effect.</p>
+<p>To ensure stable correlations, the original study recruited 400 participants, even though their power analysis indicated they needed 94 participants. Due to budgetary constrains, this replication will likely have a much smaller sample size than the original.</p>
 </div>
 <div id="methods-addendum-post-data-collection" class="section level3">
 <h3>Methods Addendum (Post Data Collection)</h3>
@@ -1605,12 +1606,16 @@ div.tocify {
 <h2>Results</h2>
 <div id="data-preparation" class="section level3">
 <h3>Data preparation</h3>
-<p>Data preparation following the analysis plan.</p>
+<p>At this time in the replication I do not have any data to prepare and do not have a clear picture of how the raw data look from MTurk. However, I will have to exclude any participants who do not meet the two inclusion criteria. Additionally, if MTurk does not provide a unique subect ID number for each participant, I will have to create a new entry for each item that assigns each participant a subject ID number. I will also have to gather the raw data into a long form dataframe so that they work well within the tidyverse. Once the data are in long form, I will have to re-label columns for each measure (support for resettling refugees, kind-of-person mind-sets, mind-sets about intelligence, and political orientation) so that I can group based on the type of measure and calculate the descritpive statistics for each measure.</p>
+</div>
+<div id="participant-demographics" class="section level3">
+<h3>Participant Demographics</h3>
+<p>A brief analysis will be conducted on the demographic measures to get an understanding of the demographic makeup of the sample. Factors that will be looked at include gender, age, and race.</p>
 </div>
 <div id="confirmatory-analysis" class="section level3">
 <h3>Confirmatory analysis</h3>
-<p>The analyses as specified in the analysis plan.</p>
-<p><em>Side-by-side graph with original graph is ideal here</em></p>
+<p>As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) has on participant’s support for resettling refugees.</p>
+<p>Due to the nature of the regressions, the original paper has no figures. I could include a graph of the first linear model I build but I’m not sure how much value that would add to the replication. <em>Side-by-side graph with original graph is ideal here</em></p>
 </div>
 <div id="exploratory-analyses" class="section level3">
 <h3>Exploratory analyses</h3>

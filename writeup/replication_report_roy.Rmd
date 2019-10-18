@@ -82,12 +82,10 @@ First, participants who are not U.S citizens or are U.S citizens living abroad w
 
 Next, I will calculate descriptive statistics for each variable (kind of person mindsets, mindsets about intelligence, political orientation, and support for resettling refugees). 
 
-Then, per the original study:
+**Key Analysis of Interest:**
 
 "[I will] conduct a linear regression with participants’ support for resettling refugees as the dependent measure and their kind-of-person mind-sets, mind-sets about intelligence, and political orientation as independent variables"
  
-
-**Clarify key analysis of interest here**  You can also pre-specify additional analyses you plan to do.
 
 ### Differences from Original Study
 
@@ -123,7 +121,8 @@ At this time in the replication I do not have any data to prepare and do not hav
 #### Prepare data for analysis - create columns etc.
 ```
 
-###Participant Demographics
+### Participant Demographics
+
 A brief analysis will be conducted on the demographic measures to get an understanding of the demographic makeup of the sample. Factors that will be looked at include gender, age, and race.
 
 ### Confirmatory analysis
