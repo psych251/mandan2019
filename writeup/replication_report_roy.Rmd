@@ -115,12 +115,31 @@ At this time in the replication I do not have any data to prepare and do not hav
 ###Data Preparation
 
 ####Load Relevant Libraries and Functions
+library(tidyverse)
 
 ####Import data
 
+#rawData <- import_csv('data.csv')
+
+
 #### Data exclusion / filtering
 
+#USCitizen<-RawData$citizenship==TRUE
+#filteredData <- filter(rawData, USCitizen) 
+
+
 #### Prepare data for analysis - create columns etc.
+
+#filteredData <- filteredData %>% 
+#   mutate(id=rownumber())  ##id numbers for each participant
+
+### Not sure what the exact labels will be coming out of Qualtrics but
+### will add new column where a 1 indicates that the DV (refugee support) was 
+### presented first and a 0 where IV (mindset measures) were presented first
+
+
+
+
 ```
 
 ### Participant Demographics
@@ -129,7 +148,19 @@ A brief analysis will be conducted on the demographic measures to get an underst
 
 ### Confirmatory analysis
 
-As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) has on participant's support for resettling refugees.
+As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) and the interaction between kind of person mindsets and presentation order have on participant's support for resettling refugees.
+
+```{r include F}
+
+#model1 <- lm(refAtt ~ intelligenceMind)
+#model2 <- lm(refAtt ~ intelligenceMind + politicalOrient)
+#model3 <- lm(refAtt ~ intelligenceMind + politicalOrient + kopMind)
+
+#model4 <- lm(refAtt ~ intelligenceMind + politicalOrient + kopMind + presentationOrder + kopMind*presentationOrder)
+
+
+
+```
 
 
 Due to the nature of the regressions, the original paper has no figures. I could include a graph of the first linear model I build but I'm not sure how much value that would add to the replication. 
