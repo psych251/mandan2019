@@ -1608,6 +1608,37 @@ div.tocify {
 <div id="data-preparation" class="section level3">
 <h3>Data preparation</h3>
 <p>At this time in the replication I do not have any data to prepare and do not have a clear picture of how the raw data look from MTurk. However, I will have to exclude any participants who do not meet the two inclusion criteria. Additionally, if MTurk does not provide a unique subect ID number for each participant, I will have to create a new entry for each item that assigns each participant a subject ID number. I will also have to gather the raw data into a long form dataframe so that they work well within the tidyverse. Once the data are in long form, I will have to re-label columns for each measure (support for resettling refugees, kind-of-person mind-sets, mind-sets about intelligence, and political orientation) so that I can group based on the type of measure and calculate the descritpive statistics for each measure.</p>
+<pre class="r"><code>###Data Preparation
+
+####Load Relevant Libraries and Functions
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ──────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ─────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>####Import data
+
+#rawData &lt;- import_csv('data.csv')
+
+
+#### Data exclusion / filtering
+
+#USCitizen&lt;-RawData$citizenship==TRUE
+#filteredData &lt;- filter(rawData, USCitizen) 
+
+
+#### Prepare data for analysis - create columns etc.
+
+#filteredData &lt;- filteredData %&gt;% 
+#   mutate(id=rownumber())  ##id numbers for each participant
+
+### Not sure what the exact labels will be coming out of Qualtrics but
+### will add new column where a 1 indicates that the DV (refugee support) was 
+### presented first and a 0 where IV (mindset measures) were presented first</code></pre>
 </div>
 <div id="participant-demographics" class="section level3">
 <h3>Participant Demographics</h3>
@@ -1615,7 +1646,12 @@ div.tocify {
 </div>
 <div id="confirmatory-analysis" class="section level3">
 <h3>Confirmatory analysis</h3>
-<p>As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) has on participant’s support for resettling refugees.</p>
+<p>As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) and the interaction between kind of person mindsets and presentation order have on participant’s support for resettling refugees.</p>
+<pre class="r"><code>#model1 &lt;- lm(refAtt ~ intelligenceMind)
+#model2 &lt;- lm(refAtt ~ intelligenceMind + politicalOrient)
+#model3 &lt;- lm(refAtt ~ intelligenceMind + politicalOrient + kopMind)
+
+#model4 &lt;- lm(refAtt ~ intelligenceMind + politicalOrient + kopMind + presentationOrder + kopMind*presentationOrder)</code></pre>
 <p>Due to the nature of the regressions, the original paper has no figures. I could include a graph of the first linear model I build but I’m not sure how much value that would add to the replication. <em>Side-by-side graph with original graph is ideal here</em></p>
 </div>
 <div id="exploratory-analyses" class="section level3">
