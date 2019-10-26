@@ -12,7 +12,7 @@
 
 <meta name="author" content="Ethan Roy ethanroy@stanford.edu" />
 
-<meta name="date" content="2019-10-18" />
+<meta name="date" content="2019-10-25" />
 
 <title>Replication of Support for Resettling Refugees: The Role of Fixed Versus Growth Mind-Sets by Madan et. al. (2019, Psychological Science)</title>
 
@@ -1512,7 +1512,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Replication of Support for Resettling Refugees: The Role of Fixed Versus Growth Mind-Sets by Madan et. al. (2019, Psychological Science)</h1>
 <h4 class="author">Ethan Roy <a href="mailto:ethanroy@stanford.edu" class="email">ethanroy@stanford.edu</a></h4>
-<h4 class="date">October 18, 2019</h4>
+<h4 class="date">October 25, 2019</h4>
 
 </div>
 
@@ -1548,6 +1548,7 @@ div.tocify {
 <ul>
 <li><a href="https://github.com/psych251/mandan2019">Project Repository</a></li>
 <li><a href="https://github.com/psych251/mandan2019/blob/master/original_paper/mandan2019.pdf">Original Paper</a></li>
+<li><a href="https://stanforduniversity.qualtrics.com/jfe/form/SV_8iCy0tOjjbvXK4J">Survey Link</a></li>
 </ul>
 </div>
 </div>
@@ -1607,51 +1608,232 @@ div.tocify {
 <h2>Results</h2>
 <div id="data-preparation" class="section level3">
 <h3>Data preparation</h3>
-<p>At this time in the replication I do not have any data to prepare and do not have a clear picture of how the raw data look from MTurk. However, I will have to exclude any participants who do not meet the two inclusion criteria. Additionally, if MTurk does not provide a unique subect ID number for each participant, I will have to create a new entry for each item that assigns each participant a subject ID number. I will also have to gather the raw data into a long form dataframe so that they work well within the tidyverse. Once the data are in long form, I will have to re-label columns for each measure (support for resettling refugees, kind-of-person mind-sets, mind-sets about intelligence, and political orientation) so that I can group based on the type of measure and calculate the descritpive statistics for each measure.</p>
-<pre class="r"><code>###Data Preparation
+<p>Below is the data preparation for the pilot data collected through the direct distribution of my qualtirics survey.</p>
+<pre class="r"><code>### Pilot Data Preparation
 
 ####Load Relevant Libraries and Functions
 library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ──────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
 ## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
 ## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
-<pre><code>## ── Conflicts ─────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>####Import data
 
-#rawData &lt;- import_csv('data.csv')
+setwd(&quot;/Users/Ethan/Documents/Stanford/Fall 2019/Psych 251/mandan2019/&quot;) #Set working directory
 
+rawData &lt;- read.csv(&quot;pilotData.csv&quot;,stringsAsFactors = FALSE)
 
 #### Data exclusion / filtering
 
-#USCitizen&lt;-RawData$citizenship==TRUE
-#filteredData &lt;- filter(rawData, USCitizen) 
+colnames(rawData)[colnames(rawData) == &quot;FL_4_DO&quot;] &lt;- &quot;randomOrder&quot; 
+#Rename column with randomizer data
 
+rawData$randomOrder[rawData$randomOrder=='FL_18|Refugee'] &lt;- &quot;mindsetsFirst&quot;
+rawData$randomOrder[rawData$randomOrder==&quot;Refugee|FL_18&quot;]&lt;- &quot;refugeeFirst&quot;
+#rename values in the randomOrder column to reflect whether that participant saw the mindset questions or refugee questions first
+
+filteredData &lt;- filter(rawData, rawData$Citizen==1) 
+#filter out any participants who are not US Citizens per original paper
 
 #### Prepare data for analysis - create columns etc.
 
-#filteredData &lt;- filteredData %&gt;% 
-#   mutate(id=rownumber())  ##id numbers for each participant
+filteredData$ID &lt;- seq.int(nrow(filteredData)) #give each row a participant ID
 
-### Not sure what the exact labels will be coming out of Qualtrics but
-### will add new column where a 1 indicates that the DV (refugee support) was 
-### presented first and a 0 where IV (mindset measures) were presented first</code></pre>
+#Could not get qualtrics to export text and numeric data so decoding from numeric to string values for ethinicity field
+filteredData$Ethnicity[filteredData$Ethnicity==15]&lt;-&quot;European American&quot;
+filteredData$Ethnicity[filteredData$Ethnicity==16]&lt;-&quot;African American&quot;
+filteredData$Ethnicity[filteredData$Ethnicity==17]&lt;-&quot;Asian American&quot;
+filteredData$Ethnicity[filteredData$Ethnicity==18]&lt;-&quot;Latin American&quot;
+filteredData$Ethnicity[filteredData$Ethnicity==19]&lt;-&quot;Native American&quot;
+filteredData$Ethnicity[filteredData$Ethnicity==20]&lt;-&quot;Multiracial&quot;
+filteredData$Ethnicity[filteredData$Ethnicity==21]&lt;-&quot;Other&quot;
+
+
+tidyData &lt;- filteredData %&gt;% 
+    gather(Measure,Score,contains(&quot;Personal&quot;),contains(&quot;Intell&quot;),contains(&quot;Ref_&quot;),contains(&quot;Pol&quot;))
+
+tidyData$Score&lt;-as.numeric(tidyData$Score)
+
+tidyData$Measure[contains(&quot;Personal&quot;,vars = tidyData$Measure)]&lt;- &quot;personalityMeasure&quot;
+tidyData$Measure[contains(&quot;Intell&quot;,vars = tidyData$Measure)]&lt;- &quot;intelligenceMeasure&quot;
+tidyData$Measure[contains(&quot;Ref&quot;,vars = tidyData$Measure)]&lt;- &quot;refugeeMeasure&quot;
+tidyData$Measure[contains(&quot;Pol&quot;,vars = tidyData$Measure)]&lt;- &quot;politicalMeasure&quot;
+#refer all questions within each measure by that measure instead of measure_questionNumber
+
+modelData &lt;-tidyData %&gt;% 
+  group_by(ID,randomOrder,Measure) %&gt;% 
+  summarise(meanScores=mean(Score,na.rm=T))
+
+modelData &lt;- modelData %&gt;% 
+  spread(Measure,meanScores)
+#spread so each participant is in one row and mean scores for each measure are the columns
+
+modelData</code></pre>
+<pre><code>## # A tibble: 11 x 6
+## # Groups:   ID, randomOrder [11]
+##       ID randomOrder intelligenceMea… personalityMeas… politicalMeasure
+##    &lt;int&gt; &lt;chr&gt;                  &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+##  1     1 mindsetsFi…             2.88             4.29             3   
+##  2     2 refugeeFir…             4.38             4                4   
+##  3     3 mindsetsFi…             4                4.5              6   
+##  4     4 refugeeFir…             4.5              4.62             6   
+##  5     5 refugeeFir…             2                2.5              7   
+##  6     6 mindsetsFi…             3.25             2                3.33
+##  7     7 refugeeFir…             3.12             2.88             4.67
+##  8     8 refugeeFir…             4.12             4.25             5   
+##  9     9 refugeeFir…             3.25             3.5              7   
+## 10    10 refugeeFir…             3.12             3.12             4   
+## 11    11 mindsetsFi…             3.5              3                5   
+## # … with 1 more variable: refugeeMeasure &lt;dbl&gt;</code></pre>
 </div>
 <div id="participant-demographics" class="section level3">
 <h3>Participant Demographics</h3>
-<p>A brief analysis will be conducted on the demographic measures to get an understanding of the demographic makeup of the sample. Factors that will be looked at include gender, age, and race.</p>
+<p>A brief analysis will be conducted on the demographic measures to get an understanding of the demographic makeup of the sample. Factors that will be looked at include gender, age, and ethnicity.</p>
+<p><strong>Number of subjects in pilot run:</strong></p>
+<pre class="r"><code>  length(modelData$ID)</code></pre>
+<pre><code>## [1] 11</code></pre>
+<p><strong>Age:</strong></p>
+<pre class="r"><code>  ageBreakdown &lt;- filteredData %&gt;% 
+    summarise(Average=mean(as.numeric(Age)), SD=sd(as.numeric(Age)))
+  
+  ageBreakdown</code></pre>
+<pre><code>##    Average       SD
+## 1 29.27273 6.214353</code></pre>
+<p><strong>Gender:</strong></p>
+<pre class="r"><code>  genderBreakdown &lt;- filteredData %&gt;% 
+    group_by(Gender) %&gt;% 
+    summarise(Count=length(Gender), Percentage = length(Gender)/length(filteredData$Gender)*100)
+
+  genderBreakdown</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   Gender Count Percentage
+##   &lt;chr&gt;  &lt;int&gt;      &lt;dbl&gt;
+## 1 aldfkj     1       9.09
+## 2 Female     3      27.3 
+## 3 Male       7      63.6</code></pre>
+<p><strong>Ethnicity:</strong></p>
+<pre class="r"><code>  ethnicityBreakdown &lt;- filteredData %&gt;% 
+    group_by(Ethnicity) %&gt;% 
+    summarise(Count=length(Ethnicity), Percentage = length(Ethnicity)/length(filteredData$Ethnicity)*100)
+
+  ethnicityBreakdown</code></pre>
+<pre><code>## # A tibble: 4 x 3
+##   Ethnicity         Count Percentage
+##   &lt;chr&gt;             &lt;int&gt;      &lt;dbl&gt;
+## 1 European American     8      72.7 
+## 2 Latin American        1       9.09
+## 3 Multiracial           1       9.09
+## 4 Other                 1       9.09</code></pre>
 </div>
 <div id="confirmatory-analysis" class="section level3">
 <h3>Confirmatory analysis</h3>
 <p>As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) and the interaction between kind of person mindsets and presentation order have on participant’s support for resettling refugees.</p>
-<pre class="r"><code>#model1 &lt;- lm(refAtt ~ intelligenceMind)
-#model2 &lt;- lm(refAtt ~ intelligenceMind + politicalOrient)
-#model3 &lt;- lm(refAtt ~ intelligenceMind + politicalOrient + kopMind)
-
-#model4 &lt;- lm(refAtt ~ intelligenceMind + politicalOrient + kopMind + presentationOrder + kopMind*presentationOrder)</code></pre>
+<p><strong>Summary of Model 1:</strong></p>
+<pre class="r"><code>model1 &lt;- lm(refugeeMeasure ~ intelligenceMeasure, d=modelData)
+summary(model1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = refugeeMeasure ~ intelligenceMeasure, data = modelData)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.6541 -0.6221 -0.2578  0.1697  2.7839 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)           4.4883     1.9000   2.362   0.0424 *
+## intelligenceMeasure  -0.1671     0.5372  -0.311   0.7629  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.253 on 9 degrees of freedom
+## Multiple R-squared:  0.01063,    Adjusted R-squared:  -0.09929 
+## F-statistic: 0.09674 on 1 and 9 DF,  p-value: 0.7629</code></pre>
+<p><strong>Summary of Model 2:</strong></p>
+<pre class="r"><code>model2 &lt;- lm(refugeeMeasure ~ intelligenceMeasure+politicalMeasure, d=modelData)
+summary(model2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = refugeeMeasure ~ intelligenceMeasure + politicalMeasure, 
+##     data = modelData)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.26185 -0.77960 -0.05197  0.40613  2.43473 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)           6.3110     2.4155   2.613    0.031 *
+## intelligenceMeasure  -0.2106     0.5270  -0.400    0.700  
+## politicalMeasure     -0.3344     0.2829  -1.182    0.271  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.226 on 8 degrees of freedom
+## Multiple R-squared:  0.1578, Adjusted R-squared:  -0.0528 
+## F-statistic: 0.7492 on 2 and 8 DF,  p-value: 0.5032</code></pre>
+<p><strong>Summary of Model 3:</strong></p>
+<pre class="r"><code>model3 &lt;- lm(refugeeMeasure ~ intelligenceMeasure+politicalMeasure+personalityMeasure, d=modelData)
+summary(model3)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = refugeeMeasure ~ intelligenceMeasure + politicalMeasure + 
+##     personalityMeasure, data = modelData)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.4195 -0.6726 -0.0722  0.4054  2.4313 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)           6.3488     2.5809   2.460   0.0435 *
+## intelligenceMeasure  -0.1046     0.7603  -0.138   0.8945  
+## politicalMeasure     -0.3224     0.3069  -1.050   0.3284  
+## personalityMeasure   -0.1323     0.6393  -0.207   0.8419  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.307 on 7 degrees of freedom
+## Multiple R-squared:  0.1629, Adjusted R-squared:  -0.1959 
+## F-statistic: 0.454 on 3 and 7 DF,  p-value: 0.7227</code></pre>
+<p><strong>Summary of Model 4:</strong></p>
+<pre class="r"><code>model4 &lt;- lm(refugeeMeasure ~ intelligenceMeasure + politicalMeasure + personalityMeasure + randomOrder + personalityMeasure*randomOrder, d=modelData)
+summary(model4)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = refugeeMeasure ~ intelligenceMeasure + politicalMeasure + 
+##     personalityMeasure + randomOrder + personalityMeasure * randomOrder, 
+##     data = modelData)
+## 
+## Residuals:
+##        1        2        3        4        5        6        7        8 
+## -0.09173 -0.93885 -0.19728  0.04998 -1.09656 -0.41385 -0.18234 -0.31383 
+##        9       10       11 
+##  0.98306  1.49854  0.70286 
+## 
+## Coefficients:
+##                                            Estimate Std. Error t value
+## (Intercept)                                  0.9731     3.8808   0.251
+## intelligenceMeasure                          1.2452     1.0409   1.196
+## politicalMeasure                            -0.5297     0.2856  -1.855
+## personalityMeasure                           0.2049     0.5689   0.360
+## randomOrderrefugeeFirst                      9.1813     4.7120   1.949
+## personalityMeasure:randomOrderrefugeeFirst  -2.3409     1.3243  -1.768
+##                                            Pr(&gt;|t|)
+## (Intercept)                                   0.812
+## intelligenceMeasure                           0.285
+## politicalMeasure                              0.123
+## personalityMeasure                            0.734
+## randomOrderrefugeeFirst                       0.109
+## personalityMeasure:randomOrderrefugeeFirst    0.137
+## 
+## Residual standard error: 1.108 on 5 degrees of freedom
+## Multiple R-squared:   0.57,  Adjusted R-squared:  0.1399 
+## F-statistic: 1.325 on 5 and 5 DF,  p-value: 0.3824</code></pre>
 <p>Due to the nature of the regressions, the original paper has no figures. I could include a graph of the first linear model I build but I’m not sure how much value that would add to the replication. <em>Side-by-side graph with original graph is ideal here</em></p>
 </div>
 <div id="exploratory-analyses" class="section level3">

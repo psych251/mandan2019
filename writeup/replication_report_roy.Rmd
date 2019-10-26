@@ -41,6 +41,7 @@ While replicating this study, I foresee the following challenges:
 
 * [Project Repository](https://github.com/psych251/mandan2019)
 * [Original Paper](https://github.com/psych251/mandan2019/blob/master/original_paper/mandan2019.pdf)
+* [Survey Link](https://stanforduniversity.qualtrics.com/jfe/form/SV_8iCy0tOjjbvXK4J)
 
 ## Methods
 
@@ -109,53 +110,148 @@ You can comment this section out prior to final report with data collection.
 
 ### Data preparation
 
-At this time in the replication I do not have any data to prepare and do not have a clear picture of how the raw data look from MTurk. However, I will have to exclude any participants who do not meet the two inclusion criteria. Additionally, if MTurk does not provide a unique subect ID number for each participant, I will have to create a new entry for each item that assigns each participant a subject ID number. I will also have to gather the raw data into a long form dataframe so that they work well within the tidyverse. Once the data are in long form, I will have to re-label columns for each measure (support for resettling refugees, kind-of-person mind-sets, mind-sets about intelligence, and political orientation) so that I can group based on the type of measure and calculate the descritpive statistics for each measure.
-	
-```{r}
+Below is the data preparation for the pilot data collected through the direct distribution of my qualtirics survey.
 
-###Data Preparation
+
+	
+```{r echo=T}
+
+
+### Pilot Data Preparation
 
 ####Load Relevant Libraries and Functions
 library(tidyverse)
 
 ####Import data
 
-#rawData <- import_csv('data.csv')
+setwd("/Users/Ethan/Documents/Stanford/Fall 2019/Psych 251/mandan2019/") #Set working directory
 
+rawData <- read.csv("pilotData.csv",stringsAsFactors = FALSE)
 
 #### Data exclusion / filtering
 
-#USCitizen<-RawData$citizenship==TRUE
-#filteredData <- filter(rawData, USCitizen) 
+colnames(rawData)[colnames(rawData) == "FL_4_DO"] <- "randomOrder" 
+#Rename column with randomizer data
 
+rawData$randomOrder[rawData$randomOrder=='FL_18|Refugee'] <- "mindsetsFirst"
+rawData$randomOrder[rawData$randomOrder=="Refugee|FL_18"]<- "refugeeFirst"
+#rename values in the randomOrder column to reflect whether that participant saw the mindset questions or refugee questions first
+
+filteredData <- filter(rawData, rawData$Citizen==1) 
+#filter out any participants who are not US Citizens per original paper
 
 #### Prepare data for analysis - create columns etc.
 
-#filteredData <- filteredData %>% 
-#   mutate(id=rownumber())  ##id numbers for each participant
+filteredData$ID <- seq.int(nrow(filteredData)) #give each row a participant ID
 
-### Not sure what the exact labels will be coming out of Qualtrics but
-### will add new column where a 1 indicates that the DV (refugee support) was 
-### presented first and a 0 where IV (mindset measures) were presented first
+#Could not get qualtrics to export text and numeric data so decoding from numeric to string values for ethinicity field
+filteredData$Ethnicity[filteredData$Ethnicity==15]<-"European American"
+filteredData$Ethnicity[filteredData$Ethnicity==16]<-"African American"
+filteredData$Ethnicity[filteredData$Ethnicity==17]<-"Asian American"
+filteredData$Ethnicity[filteredData$Ethnicity==18]<-"Latin American"
+filteredData$Ethnicity[filteredData$Ethnicity==19]<-"Native American"
+filteredData$Ethnicity[filteredData$Ethnicity==20]<-"Multiracial"
+filteredData$Ethnicity[filteredData$Ethnicity==21]<-"Other"
+
+
+tidyData <- filteredData %>% 
+    gather(Measure,Score,contains("Personal"),contains("Intell"),contains("Ref_"),contains("Pol"))
+
+tidyData$Score<-as.numeric(tidyData$Score)
+
+tidyData$Measure[contains("Personal",vars = tidyData$Measure)]<- "personalityMeasure"
+tidyData$Measure[contains("Intell",vars = tidyData$Measure)]<- "intelligenceMeasure"
+tidyData$Measure[contains("Ref",vars = tidyData$Measure)]<- "refugeeMeasure"
+tidyData$Measure[contains("Pol",vars = tidyData$Measure)]<- "politicalMeasure"
+#refer all questions within each measure by that measure instead of measure_questionNumber
+
+modelData <-tidyData %>% 
+  group_by(ID,randomOrder,Measure) %>% 
+  summarise(meanScores=mean(Score,na.rm=T))
+
+modelData <- modelData %>% 
+  spread(Measure,meanScores)
+#spread so each participant is in one row and mean scores for each measure are the columns
+
+modelData
 
 ```
 
 ### Participant Demographics
 
-A brief analysis will be conducted on the demographic measures to get an understanding of the demographic makeup of the sample. Factors that will be looked at include gender, age, and race.
+A brief analysis will be conducted on the demographic measures to get an understanding of the demographic makeup of the sample. Factors that will be looked at include gender, age, and ethnicity.
+
+**Number of subjects in pilot run:**
+
+```{r}
+
+  length(modelData$ID)
+
+```
+
+**Age:**
+
+```{r }
+  
+  ageBreakdown <- filteredData %>% 
+    summarise(Average=mean(as.numeric(Age)), SD=sd(as.numeric(Age)))
+  
+  ageBreakdown
+```
+
+**Gender:**
+
+```{r }
+
+  genderBreakdown <- filteredData %>% 
+    group_by(Gender) %>% 
+    summarise(Count=length(Gender), Percentage = length(Gender)/length(filteredData$Gender)*100)
+
+  genderBreakdown
+
+```
+
+**Ethnicity:**
+
+```{r }
+
+  ethnicityBreakdown <- filteredData %>% 
+    group_by(Ethnicity) %>% 
+    summarise(Count=length(Ethnicity), Percentage = length(Ethnicity)/length(filteredData$Ethnicity)*100)
+
+  ethnicityBreakdown
+
+```
 
 ### Confirmatory analysis
 
 As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) and the interaction between kind of person mindsets and presentation order have on participant's support for resettling refugees.
 
-```{r include F}
+**Summary of Model 1:**
+```{r }
 
-#model1 <- lm(refAtt ~ intelligenceMind)
-#model2 <- lm(refAtt ~ intelligenceMind + politicalOrient)
-#model3 <- lm(refAtt ~ intelligenceMind + politicalOrient + kopMind)
+model1 <- lm(refugeeMeasure ~ intelligenceMeasure, d=modelData)
+summary(model1)
+```
 
-#model4 <- lm(refAtt ~ intelligenceMind + politicalOrient + kopMind + presentationOrder + kopMind*presentationOrder)
+**Summary of Model 2:**
+```{r}
+model2 <- lm(refugeeMeasure ~ intelligenceMeasure+politicalMeasure, d=modelData)
+summary(model2)
 
+```
+
+**Summary of Model 3:**
+```{r}
+model3 <- lm(refugeeMeasure ~ intelligenceMeasure+politicalMeasure+personalityMeasure, d=modelData)
+summary(model3)
+
+```
+
+**Summary of Model 4:**
+```{r}
+model4 <- lm(refugeeMeasure ~ intelligenceMeasure + politicalMeasure + personalityMeasure + randomOrder + personalityMeasure*randomOrder, d=modelData)
+summary(model4)
 
 
 ```
