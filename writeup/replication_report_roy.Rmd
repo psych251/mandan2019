@@ -130,29 +130,21 @@ rawData <- read.csv("pilotData.csv",stringsAsFactors = FALSE)
 
 #### Data exclusion / filtering
 
-colnames(rawData)[colnames(rawData) == "FL_4_DO"] <- "randomOrder" 
-#Rename column with randomizer data
 
-rawData$randomOrder[rawData$randomOrder=='FL_18|Refugee'] <- "mindsetsFirst"
-rawData$randomOrder[rawData$randomOrder=="Refugee|FL_18"]<- "refugeeFirst"
-#rename values in the randomOrder column to reflect whether that participant saw the mindset questions or refugee questions first
+
+#Rename column with randomizer data and rename values in the randomOrder column to reflect whether that participant saw the mindset questions or refugee questions first
+rawData<-rawData %>% rename(randomOrder = "FL_4_DO") %>%
+  mutate(randomOrder=recode(randomOrder,'FL_18|Refugee'='mindsetsFirst','Refugee|FL_18'='refugeeFirst'))
 
 filteredData <- filter(rawData, rawData$Citizen==1) 
 #filter out any participants who are not US Citizens per original paper
 
 #### Prepare data for analysis - create columns etc.
 
-filteredData$ID <- seq.int(nrow(filteredData)) #give each row a participant ID
+filteredData <- filteredData %>% mutate(ID = row_number()) #give each row a participant ID
 
 #Could not get qualtrics to export text and numeric data so decoding from numeric to string values for ethinicity field
-filteredData$Ethnicity[filteredData$Ethnicity==15]<-"European American"
-filteredData$Ethnicity[filteredData$Ethnicity==16]<-"African American"
-filteredData$Ethnicity[filteredData$Ethnicity==17]<-"Asian American"
-filteredData$Ethnicity[filteredData$Ethnicity==18]<-"Latin American"
-filteredData$Ethnicity[filteredData$Ethnicity==19]<-"Native American"
-filteredData$Ethnicity[filteredData$Ethnicity==20]<-"Multiracial"
-filteredData$Ethnicity[filteredData$Ethnicity==21]<-"Other"
-
+filteredData$Ethnicity <- factor(filteredData$Ethnicity, levels = c(15,16,17,18,19,20,21), labels = c("European American", "African American", "Asian American", "Latin American", "Native American", "Multiracial", "Other"))
 
 tidyData <- filteredData %>% 
     gather(Measure,Score,contains("Personal"),contains("Intell"),contains("Ref_"),contains("Pol"))
@@ -253,12 +245,29 @@ summary(model3)
 model4 <- lm(refugeeMeasure ~ intelligenceMeasure + politicalMeasure + personalityMeasure + randomOrder + personalityMeasure*randomOrder, d=modelData)
 summary(model4)
 
+```
+
+**Comparison of Models
+```{r}
+
+comp = anova(model1,model2,model3,model4, test="Chisq")
+
+comp
 
 ```
 
-
 Due to the nature of the regressions, the original paper has no figures. I could include a graph of the first linear model I build but I'm not sure how much value that would add to the replication. 
 *Side-by-side graph with original graph is ideal here*
+*Plot of First Linear Model with Pilot A data*
+```{r}
+
+modelData %>% 
+  ggplot(aes(x = intelligenceMeasure, y = refugeeMeasure, fill = randomOrder)) +
+  geom_jitter(aes(colour = randomOrder, alpha=0.01), width = 0.2, height = 0.4) + 
+  geom_smooth(method=lm)
+
+
+```
 
 ### Exploratory analyses
 
