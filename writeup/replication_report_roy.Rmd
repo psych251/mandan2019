@@ -124,13 +124,12 @@ library(tidyverse)
 
 ####Import data
 
-setwd("/Users/Ethan/Documents/Stanford/Fall 2019/Psych 251/mandan2019/") #Set working directory
+setwd("/Users/Ethan/Documents/Stanford/Fall 2019/Psych 251/mandan2019/Data") #Set working directory
 
-rawData <- read.csv("pilotData.csv",stringsAsFactors = FALSE)
+#rawData <- read.csv("pilotData.csv",stringsAsFactors = FALSE) #Load Pilot A data
+rawData <- read.csv("pilotBData.csv",stringsAsFactors = FALSE) #Load Pilot B data
 
 #### Data exclusion / filtering
-
-
 
 #Rename column with randomizer data and rename values in the randomOrder column to reflect whether that participant saw the mindset questions or refugee questions first
 rawData<-rawData %>% rename(randomOrder = "FL_4_DO") %>%
@@ -145,6 +144,8 @@ filteredData <- filteredData %>% mutate(ID = row_number()) #give each row a part
 
 #Could not get qualtrics to export text and numeric data so decoding from numeric to string values for ethinicity field
 filteredData$Ethnicity <- factor(filteredData$Ethnicity, levels = c(15,16,17,18,19,20,21), labels = c("European American", "African American", "Asian American", "Latin American", "Native American", "Multiracial", "Other"))
+
+filteredData$Gender <- factor(filteredData$Gender,levels = c(11,12,13), labels = c("Female", "Male", "Other"))
 
 tidyData <- filteredData %>% 
     gather(Measure,Score,contains("Personal"),contains("Intell"),contains("Ref_"),contains("Pol"))
@@ -192,8 +193,8 @@ A brief analysis will be conducted on the demographic measures to get an underst
 ```
 
 **Gender:**
-
 ```{r }
+filteredData$Gender
 
   genderBreakdown <- filteredData %>% 
     group_by(Gender) %>% 
@@ -212,6 +213,17 @@ A brief analysis will be conducted on the demographic measures to get an underst
     summarise(Count=length(Ethnicity), Percentage = length(Ethnicity)/length(filteredData$Ethnicity)*100)
 
   ethnicityBreakdown
+
+```
+
+**Exploratory Visualization**
+
+```{r}
+#exploratory demographic histogram to see age distributions by gender and ethnicity
+
+ggplot(filteredData, aes(x = Age, group = Ethnicity))+
+  geom_histogram(stat="count") +
+  facet_grid(Gender~Ethnicity)
 
 ```
 
@@ -258,7 +270,7 @@ comp
 
 Due to the nature of the regressions, the original paper has no figures. I could include a graph of the first linear model I build but I'm not sure how much value that would add to the replication. 
 *Side-by-side graph with original graph is ideal here*
-*Plot of First Linear Model with Pilot A data*
+*Plot of First Linear Model with Pilot B data*
 ```{r}
 
 modelData %>% 
