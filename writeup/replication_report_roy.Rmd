@@ -14,7 +14,7 @@ output:
 
 ## Introduction
 
-For this projet, I plan to replicate Madan et. al.'s 2019 study, which explores the connection between a fixed versus growth mindset and how those mindsets impact an individual's openness to supporting refugees in their country. Though my research interests align more closely with the field of educational neuroscience, I am intrigued by the impact a growth mindset can have on student's learning. By replicating this study, I will be able to reflect more on the impact of mindset (growth or fixed) on an individuals openness to new people, cultures, and ways of thinking.  
+For this project, I plan to replicate Madan et. al.'s 2019 study, which explores the connection between a fixed versus growth mindset and how those mindsets impact an individual's openness to supporting refugees in their country. Though my research interests align more closely with the field of educational neuroscience, I am intrigued by the impact a growth mindset can have on student's learning. By replicating this study, I will be able to reflect more on the impact of mindset (growth or fixed) on an individuals openness to new people, cultures, and ways of thinking.  
 
 ### Study Description
 
@@ -27,7 +27,7 @@ Participants will be recruited through Amazon Mechanical Turk. Per the original 
 * are a United States Citizen
 * currently residing in the United States
 
-Once participants have been screened, they will read a breif paragraph outlining the  refugee resettlement policy of the United States announced by the president in September of 2016. They will then answer a four item questionaire to measure their support for resettling refugees and two eight item questionaires measuring their views on the type of person someone is and their mindsets regarding participants. Participants will be randomly assigned so that half of sample responds to the refugee measure first and half of the sample responds to the mindsets measure first. Finally, participants will respond to a three item survey measuring their political orientation. 
+Once participants have been screened, they will read a brief paragraph outlining the current refugee resettlement policy of the United States announced by the president in September of 2019. They will then answer a four item questionaire to measure their support for resettling refugees and two eight item questionaires measuring their views on the type of person someone is and their mindsets regarding participants. Participants will be randomly assigned so that half of sample responds to the refugee measure first and half of the sample responds to the mindsets measure first. Finally, participants will respond to a three item survey measuring their political orientation. 
 
 #### Potential Challenges
 
@@ -49,18 +49,26 @@ While replicating this study, I foresee the following challenges:
 
 Original effect size, power analysis for samples to achieve 80%, 90%, 95% power to detect that effect size.  Considerations of feasibility for selecting planned sample size.
 
+The original effect size was r<sup>2</sup> = 0.428. Power analysis using G*Power revealed that the reach certain levels of power the following sample sizes are needed:
+
+* 80% power requires a sample of 22
+* 90% power requires a sample of 27
+* 95% power requires a sample of 32
+
+Completion of the survey takes about ten minutes. In order to remain consistent with California minimum wage ($7.25/hour), each participant will recieve $1.21 as compensation. To account for the course budget, a minimum sample of 27 will be required to attain 90% power. Though the original paper does not report an explicit exclusion rate, 28 participants will be asked to complete the survey just to account for any participants who do not meet the survey requirements. 
+
 ### Planned Sample
 
-The planned sample for this replication will be **[need to do power analysis]** participants based on the power analysis conducted above. Participants will be screened to ensure that they are citizens of the United States and currently residing in the United States.
+The planned sample for this replication will be 28 participants based on the power analysis conducted above. Participants will be screened to ensure that they are citizens of the United States and currently residing in the United States.
 
 ### Materials
 
 As quoted from original study:
 
-"We administered four items to measure participants’ support for resettling refugees, each measured on a 7-point scale: (a) “How much do you agree that the US should take in 110,000 refugees in the next 12 months?” (*strongly disagree to strongly agree*), (b) “How much do you support the policy that the US should take in 110,000 refugees in the next 12 months?” (*strongly against to strongly support*), (c) “Do you think that the United States is taking in too many refugees?” (reverse-coded; *definitely not to definitely yes*), and (d) “Do you think that the United States is taking in too few refugees?” (*definitely not to definitely yes*).
-
+>"We administered four items to measure participants’ support for resettling refugees, each measured on a 7-point scale: (a) “How much do you agree that the US should take in 110,000 refugees in the next 12 months?” (*strongly disagree to strongly agree*), (b) “How much do you support the policy that the US should take in 110,000 refugees in the next 12 months?” (*strongly against to strongly support*), (c) “Do you think that the United States is taking in too many refugees?” (reverse-coded; *definitely not to definitely yes*), and (d) “Do you think that the United States is taking in too few refugees?” (*definitely not to definitely yes*).
+>
 We measured participants’ mind-sets about the kind of person someone is using an established eight-item scale (Levy et al., 1998; sample item: “The kind of person someone is, is something basic about them, and it can’t be changed very much”). We also measured participants’ mind-set about intelligence (fixed vs. growth) using the standard eight-item scale (Dweck, 2000; sample item: “People have a certain amount of intelligence, and they can’t really do much to change it”). For both scales, all items were scored such that higher numbers indicated stronger growth kind-of-person mind-sets or mind-sets about intelligence.
-
+>
 Finally, because the question of accepting refugees is a highly politicized issue, we measured participants’ political orientation using three items, each measured on a 7-point scale ranging from *strongly conservative* to *strongly liberal* (Item 1), *strongly right* to *strongly left* (Item 2), and *strongly Republican* to *strongly Democrat* (Item 3)."
 
 The exact items, measures, and scales were used in this replication.
@@ -68,14 +76,11 @@ The exact items, measures, and scales were used in this replication.
 
 ### Procedure	
 
-As quoted from original study: 
-
 We presented participants with the following paragraph detailing the latest refugee resettlement policy of the United States, which was announced by the U.S. president in September 2019:
 
 >The United States recently revised its policy towards refugees. The President recently signed an order that set the cap on the number of refugees admitted to the United States next year at 18,000, the lowest level since the program began four decades ago. This new cap is down from the last years limit of 30,000. This is the third consecutive year the U.S has reduced the limit of refugees admitted to the United States.  
 
 Participants were then asked to respond to the three measures described in the [Materials]. Half of the participants were randomly assigned to respond to the resettling refugees measure first while the other half responded to the mindsets measures first. After responding to both of those measures, participants responded to the political orientation measures.
-
 
 ### Analysis Plan
 
@@ -85,9 +90,8 @@ Next, I will calculate descriptive statistics for each variable (kind of person 
 
 **Key Analysis of Interest:**
 
-"[I will] conduct a linear regression with participants’ support for resettling refugees as the dependent measure and their kind-of-person mind-sets, mind-sets about intelligence, and political orientation as independent variables"
+I will conduct generate three linear models exploring  participants’ support for resettling refugees as the dependent measure and their kind-of-person mind-sets, mind-sets about intelligence, and political orientation as independent variables. These three models will be compared using an ANOVA with the key statistic being the p-value showing that the third model (which includes the mindset measure) differs from the models that do not include that measure. This value is reported to be <.01 in the original paper.
  
-
 ### Differences from Original Study
 
 To ensure stable correlations, the original study recruited 400 participants, even though their power analysis indicated they needed 94 participants. Due to budgetary constrains, this replication will likely have a much smaller sample size than the original. 
@@ -112,8 +116,6 @@ You can comment this section out prior to final report with data collection.
 
 Below is the data preparation for the pilot data collected through the direct distribution of my qualtirics survey.
 
-
-	
 ```{r echo=T}
 
 
@@ -121,13 +123,14 @@ Below is the data preparation for the pilot data collected through the direct di
 
 ####Load Relevant Libraries and Functions
 library(tidyverse)
+library(knitr)
 
 ####Import data
 
 setwd("/Users/Ethan/Documents/Stanford/Fall 2019/Psych 251/mandan2019/Data") #Set working directory
 
-#rawData <- read.csv("pilotData.csv",stringsAsFactors = FALSE) #Load Pilot A data
-rawData <- read.csv("pilotBData.csv",stringsAsFactors = FALSE) #Load Pilot B data
+rawData <- read.csv("pilotData.csv",stringsAsFactors = FALSE) #Load Pilot A data
+#rawData <- read.csv("pilotBData.csv",stringsAsFactors = FALSE) #Load Pilot B data
 
 #### Data exclusion / filtering
 
@@ -166,7 +169,7 @@ modelData <- modelData %>%
   spread(Measure,meanScores)
 #spread so each participant is in one row and mean scores for each measure are the columns
 
-modelData
+kable(modelData)
 
 ```
 
@@ -189,7 +192,7 @@ A brief analysis will be conducted on the demographic measures to get an underst
   ageBreakdown <- filteredData %>% 
     summarise(Average=mean(as.numeric(Age)), SD=sd(as.numeric(Age)))
   
-  ageBreakdown
+  kable(ageBreakdown)
 ```
 
 **Gender:**
@@ -200,7 +203,7 @@ filteredData$Gender
     group_by(Gender) %>% 
     summarise(Count=length(Gender), Percentage = length(Gender)/length(filteredData$Gender)*100)
 
-  genderBreakdown
+  kable(genderBreakdown)
 
 ```
 
@@ -212,7 +215,7 @@ filteredData$Gender
     group_by(Ethnicity) %>% 
     summarise(Count=length(Ethnicity), Percentage = length(Ethnicity)/length(filteredData$Ethnicity)*100)
 
-  ethnicityBreakdown
+  kable(ethnicityBreakdown)
 
 ```
 
@@ -229,7 +232,7 @@ ggplot(filteredData, aes(x = Age, group = Ethnicity))+
 
 ### Confirmatory analysis
 
-As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) and the interaction between kind of person mindsets and presentation order have on participant's support for resettling refugees.
+As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) and the interaction between kind of person mindsets and presentation order have on participant's support for resettling refugees. These four models will then be compared using a four-way ANOVA. The key statistic will be examining whether the third model (which includes the kind of person mindset measure) differs significantly from the models that do not include that measure.
 
 **Summary of Model 1:**
 ```{r }
@@ -264,7 +267,7 @@ summary(model4)
 
 comp = anova(model1,model2,model3,model4, test="Chisq")
 
-comp
+(comp)
 
 ```
 
