@@ -90,68 +90,87 @@ Next, I will calculate descriptive statistics for each variable (kind of person 
 
 **Key Analysis of Interest:**
 
-I will conduct generate three linear models exploring  participants’ support for resettling refugees as the dependent measure and their kind-of-person mind-sets, mind-sets about intelligence, and political orientation as independent variables. These three models will be compared using an ANOVA with the key statistic being the p-value showing that the third model (which includes the mindset measure) differs from the models that do not include that measure. This value is reported to be <.01 in the original paper.
+I will generate three linear models exploring  participants’ support for resettling refugees as the dependent measure and their kind-of-person mind-sets, mind-sets about intelligence, and political orientation as independent variables. The key statistic comes from a t-test on the correlation coefficient after adding the kind-of-person measure to the linear model. The p-value is reported to be 0.0016 in the original paper.
  
 ### Differences from Original Study
 
-To ensure stable correlations, the original study recruited 400 participants, even though their power analysis indicated they needed 94 participants. Due to budgetary constrains, this replication will likely have a much smaller sample size than the original. 
+To ensure stable correlations, the original study recruited 400 participants, even though their power analysis indicated they needed 94 participants. The current study only used 28 subjects based on the aforementioned power analysis and bugetary constraints. 
 
-Per the suggestion of the original author, participants were asked to read a summary of the most recent refugee policy of the United States, instead of the 2016 policy, the year the original study was conducted.
+Per the suggestion of the original author, participants were asked to read a summary of the most recent refugee policy of the United States, instead of the 2016 policy, the year the original study was conducted. The policy outlined in the original study stated that the U.S would increase the number of refugees it admitted, while the current policy states a reduction in the total number of refugees admitted to the United States. 
 
 ### Methods Addendum (Post Data Collection)
 
-You can comment this section out prior to final report with data collection.
-
 #### Actual Sample
-  Sample size, demographics, data exclusions based on rules spelled out in analysis plan
+All 28 participants that responded to the mTurk request were included in the study.  
 
 #### Differences from pre-data collection methods plan
-  Any differences from what was described as the original plan, or “none”.
-
+  None
 
 ## Results
-
 
 ### Data preparation
 
 Below is the data preparation for the pilot data collected through the direct distribution of my qualtirics survey.
 
-```{r echo=T}
+Here we load the knitr library for cleaner table output, the tidyverse library to allow for facilitate working with and exploring the data, the here library to facilitate setting the working directory, and the rgeolocate library to determine the state in which participants completed the survey based on their IP address.
 
+```{r echo=T, results='hide'}
 
 ### Pilot Data Preparation
 
 ####Load Relevant Libraries and Functions
-library(tidyverse)
 library(knitr)
+library(tidyverse)
+library(here)
+library(rgeolocate)
+```
 
+Next we load the data:
+```{r echo=T, results='hide'}
 ####Import data
+#setwd("/Users/Ethan/Documents/Stanford/Fall 2019/Psych 251/mandan2019/Data") #Set working directory
 
-setwd("/Users/Ethan/Documents/Stanford/Fall 2019/Psych 251/mandan2019/Data") #Set working directory
+rawData <- read.csv(here("data","finalData.csv"),stringsAsFactors = FALSE)
+```
 
-rawData <- read.csv("pilotData.csv",stringsAsFactors = FALSE) #Load Pilot A data
-#rawData <- read.csv("pilotBData.csv",stringsAsFactors = FALSE) #Load Pilot B data
+Once the raw data are loaded, we manipulate the data in various ways to allow us to run our statistical tests.
 
+First, we rename the values in the random order column to allow us to more easily determine which measure the particpants viewed first. The value 'mindsetsFirst' means that the participant responded to the mindsets measures before the refugee measure and 'refugeeFirst' means the participant responded to the refugee measure first.
+```{r}
 #### Data exclusion / filtering
 
 #Rename column with randomizer data and rename values in the randomOrder column to reflect whether that participant saw the mindset questions or refugee questions first
 rawData<-rawData %>% rename(randomOrder = "FL_4_DO") %>%
   mutate(randomOrder=recode(randomOrder,'FL_18|Refugee'='mindsetsFirst','Refugee|FL_18'='refugeeFirst'))
+```
+
+Then we filtered out any particpants who did not meet our inclusion criteria.
+
+```{r}
 
 filteredData <- filter(rawData, rawData$Citizen==1) 
 #filter out any participants who are not US Citizens per original paper
+```
 
+Next, we add a column for participant ID. Since each particicpant only spans one row, we can just use the row number as their participant ID. We also recode some of the numeric values collected by Qualtrics, such as Ethnicity and Gender, so they are human readable.
+```{r}
 #### Prepare data for analysis - create columns etc.
 
 filteredData <- filteredData %>% mutate(ID = row_number()) #give each row a participant ID
+filteredData <- filteredData %>% mutate(state = (ip_api(filteredData$IPAddress)$country_code)) #get participants state based on IP address
 
 #Could not get qualtrics to export text and numeric data so decoding from numeric to string values for ethinicity field
 filteredData$Ethnicity <- factor(filteredData$Ethnicity, levels = c(15,16,17,18,19,20,21), labels = c("European American", "African American", "Asian American", "Latin American", "Native American", "Multiracial", "Other"))
 
-filteredData$Gender <- factor(filteredData$Gender,levels = c(11,12,13), labels = c("Female", "Male", "Other"))
 
+filteredData$Gender <- factor(filteredData$Gender,levels = c(11,12,13), labels = c("Female", "Male", "Other"))
+```
+
+We then take the filtered data and make it 'tidy' so that each answer recorded by a participant becomes a row. This 'gather' generates a column called 'Measure', which refers to the type of question (intelligence, kind of person, political, or refugee) a particpant was responding two. The value for this column are then renamed to just include the measure type and not the question number to allow for grouping. We then group based on the participant ID, order in which participants answered each measure, and measure type and find the average. These grouped data are then spread into wide format so each row contains one participant and each column contains the average value of their responses for each survey measure.  
+```{r}
 tidyData <- filteredData %>% 
     gather(Measure,Score,contains("Personal"),contains("Intell"),contains("Ref_"),contains("Pol"))
+
 
 tidyData$Score<-as.numeric(tidyData$Score)
 
@@ -161,11 +180,11 @@ tidyData$Measure[contains("Ref",vars = tidyData$Measure)]<- "refugeeMeasure"
 tidyData$Measure[contains("Pol",vars = tidyData$Measure)]<- "politicalMeasure"
 #refer all questions within each measure by that measure instead of measure_questionNumber
 
-modelData <-tidyData %>% 
-  group_by(ID,randomOrder,Measure) %>% 
+modelDataTidy <-tidyData %>% 
+  group_by(ID,randomOrder,Measure,state) %>% 
   summarise(meanScores=mean(Score,na.rm=T))
 
-modelData <- modelData %>% 
+modelData <- modelDataTidy %>% 
   spread(Measure,meanScores)
 #spread so each participant is in one row and mean scores for each measure are the columns
 
@@ -175,9 +194,9 @@ kable(modelData)
 
 ### Participant Demographics
 
-A brief analysis will be conducted on the demographic measures to get an understanding of the demographic makeup of the sample. Factors that will be looked at include gender, age, and ethnicity.
 
-**Number of subjects in pilot run:**
+
+**Number of subjects in replication:**
 
 ```{r}
 
@@ -185,7 +204,7 @@ A brief analysis will be conducted on the demographic measures to get an underst
 
 ```
 
-**Age:**
+**Age (in years):**
 
 ```{r }
   
@@ -193,11 +212,11 @@ A brief analysis will be conducted on the demographic measures to get an underst
     summarise(Average=mean(as.numeric(Age)), SD=sd(as.numeric(Age)))
   
   kable(ageBreakdown)
+
 ```
 
 **Gender:**
 ```{r }
-filteredData$Gender
 
   genderBreakdown <- filteredData %>% 
     group_by(Gender) %>% 
@@ -219,20 +238,61 @@ filteredData$Gender
 
 ```
 
-**Exploratory Visualization**
+**Geographic Breakdown**
 
-```{r}
+Counts of how many respondants per state and the average political views of those respondants.
+```{r }
+
+  geoBreakdown <- modelData %>% 
+    group_by(state) %>% 
+    summarise(Count=length(state), Percentage = (length(state))/length(modelData$state)*100, Average_Political_Score = mean(politicalMeasure))
+
+  kable(geoBreakdown[order(-geoBreakdown$Average_Political_Score),])
+
+```
+
+**Political Beliefs**
+
+```{r }
+
+polBreakdownAvg <- paste("Average: ", toString(mean(modelData$politicalMeasure)))
+polBreakdownSD <- paste("SD: ", toString(sd(modelData$politicalMeasure)))
+  
+polBreakdownAvg
+polBreakdownSD
+
+```
+
+**Exploratory Visualizations**
+
+```{r }
 #exploratory demographic histogram to see age distributions by gender and ethnicity
 
+sortedAges <- sort(filteredData$Age)
+
 ggplot(filteredData, aes(x = Age, group = Ethnicity))+
-  geom_histogram(stat="count") +
+  geom_histogram(stat="count",binwidth = 1) +
+  theme_bw()+
+  scale_x_discrete(breaks = c("25","28","32","36","38","41","46","56"))+ 
+  #these hardcoded values worked best for the axis to look decent. Otherwise there were big jumps in the tick marks
+  theme(axis.text.x=element_text(angle=45))+
   facet_grid(Gender~Ethnicity)
+
+```
+
+```{r warning=FALSE}
+#exploratory political histogram to see distributions by political views
+
+ggplot(modelData, aes(x = politicalMeasure))+
+  geom_histogram(stat="count",binwidth = 1) +
+  theme_bw()+
+  theme(axis.text.x=element_text(angle=45))
 
 ```
 
 ### Confirmatory analysis
 
-As done in the original study, I plan to build three linear models. The first one will look at how mindsets about intelligence predict support for refugees. The next model will add political orientation to the independent variables and the third model will add kind of person mindsets. I will also run another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) and the interaction between kind of person mindsets and presentation order have on participant's support for resettling refugees. These four models will then be compared using a four-way ANOVA. The key statistic will be examining whether the third model (which includes the kind of person mindset measure) differs significantly from the models that do not include that measure.
+As done in the original study, I built three linear models. The first one looked at how mindsets about intelligence predict support for refugees. The next model added political orientation to the independent variables and the third model added kind of person mindsets. I also ran another regression examining the effect the order of the survey measures (support for resettling refugees measure first or mindsets measures first) and the interaction between kind of person mindsets and presentation order have on participant's support for resettling refugees. The key statistic will be a t statistic exploring whether the third model (which includes the kind of person mindset measure) differs significantly from the models that do not include that measure.
 
 **Summary of Model 1:**
 ```{r }
@@ -245,14 +305,14 @@ summary(model1)
 ```{r}
 model2 <- lm(refugeeMeasure ~ intelligenceMeasure+politicalMeasure, d=modelData)
 summary(model2)
-
 ```
 
 **Summary of Model 3:**
+
+*Key Statistical test*
 ```{r}
 model3 <- lm(refugeeMeasure ~ intelligenceMeasure+politicalMeasure+personalityMeasure, d=modelData)
 summary(model3)
-
 ```
 
 **Summary of Model 4:**
@@ -262,38 +322,96 @@ summary(model4)
 
 ```
 
-**Comparison of Models
-```{r}
-
-comp = anova(model1,model2,model3,model4, test="Chisq")
-
-(comp)
-
-```
-
-Due to the nature of the regressions, the original paper has no figures. I could include a graph of the first linear model I build but I'm not sure how much value that would add to the replication. 
-*Side-by-side graph with original graph is ideal here*
-*Plot of First Linear Model with Pilot B data*
-```{r}
-
-modelData %>% 
-  ggplot(aes(x = intelligenceMeasure, y = refugeeMeasure, fill = randomOrder)) +
-  geom_jitter(aes(colour = randomOrder, alpha=0.01), width = 0.2, height = 0.4) + 
-  geom_smooth(method=lm)
-
-
-```
 
 ### Exploratory analyses
 
-Any follow-up analyses desired (not required).  
+Due to the nature of the regressions, the original paper has no figures, however, I have included scatter plots exploring the relationship between the mindsets/political measures and the openness to refugees measure. 
+
+*Plot of First Linear Model*
+
+This plot looks at the relationship between the intelligence measure and the refugee measure.
+```{r }
+
+modelData %>% 
+  ggplot(aes(x = intelligenceMeasure, y = refugeeMeasure)) +
+  xlim(0,7)+
+  ylim(0,7)+
+  geom_jitter(aes(colour = randomOrder), width = 0.2, height = 0.4) + 
+  geom_smooth(method=lm, se=FALSE,fullrange=TRUE)+
+  theme(panel.background = element_rect(fill=FALSE),
+        axis.line = element_line(colour='black'))
+
+summary(model1)
+
+```
+
+*Plot of Second Linear Model*
+This plot looks at the relationship between the political measure and the refugee measure.
+```{r, warning=FALSE}
+
+modelData %>% 
+  ggplot(aes(x = politicalMeasure, y = refugeeMeasure)) +
+  xlim(0,7)+
+  ylim(0,7)+
+  geom_jitter(aes(colour = randomOrder), width = 0.2, height = 0.4) + 
+  geom_smooth(method=lm, se=FALSE,fullrange=TRUE)+
+  theme(panel.background = element_rect(fill=FALSE),
+        axis.line = element_line(colour='black'))
+
+model = lm(refugeeMeasure~politicalMeasure, d=modelData)
+summary(model)
+
+```
+
+*Plot of Third Linear Model*
+This plot looks at the relationship between the personality measure and the refugee measure.
+```{r, warning=FALSE}
+
+modelData %>%
+  ggplot(aes(x = personalityMeasure, y = refugeeMeasure)) +
+  xlim(0,7)+
+  ylim(0,7)+
+  geom_jitter(aes(colour = randomOrder), width = 0.2, height = 0.4) +
+  geom_smooth(method=lm, se=FALSE,fullrange=TRUE)+
+  theme(panel.background = element_rect(fill=FALSE),
+        axis.line = element_line(colour='black'))
+
+model = lm(refugeeMeasure~personalityMeasure, d=modelData)
+summary(model)
+```
+
+**Comparison of First Three Models **
+
+
+```{r}
+
+comp = anova(model1,model2,model3, test="Chisq")
+
+comp
+
+```
+
+
+**T-test comparing the random order groups**
+
+After graphing the various measures against the refugee measure, I noticed that the random order groups seemed clustered. Here I run a t-test to see if order a participant responded to the survey measures impacted their attititudes towards refugees. 
+
+```{r}
+t.test(modelData$refugeeMeasure~modelData$randomOrder)
+```
 
 ## Discussion
 
 ### Summary of Replication Attempt
 
-Open the discussion section with a paragraph summarizing the primary result from the confirmatory analysis and the assessment of whether it replicated, partially replicated, or failed to replicate the original result.  
+The confirmatory analysis found that an individual's attitude towards a person being able change (growth mindset) did not significantly predict their attitude towards welcoming refugees into their country (t(24) = -0.927, p = 0.363). This failed to replicate the original result, which found the more a person held a growth mindset, the more welcoming they were to refugees (t(400) = 3.17, p=.0016).
 
 ### Commentary
 
-Add open-ended commentary (if any) reflecting (a) insights from follow-up exploratory analysis, (b) assessment of the meaning of the replication (or not) - e.g., for a failure to replicate, are the differences between original and present study ones that definitely, plausibly, or are unlikely to have been moderators of the result, and (c) discussion of any objections or challenges raised by the current and original authors about the replication attempt.  None of these need to be long.
+Exploratory plotting of the three single variable models reinforced the notion that none of the predictor variables correlated with the criterion variable. However, these plots did highlight a potential difference between the participants who answered the refugee measure first and those who answered the mindsets measures first. After running a two sample t-test, the observed differences based on the graph clusters was  found to be significant (p=0.009), indicating that the order the measures were presented impacted how participants responded to the refugee measure. The original authors also conducted an analysis looking at the impact stimulus order had on responses to the refugee measure and did not find a significant result.
+
+Additional exploratory plots revealed that the political views of the current participants skewed heavily to the left (mean=5.178571	sd = 1.688699), which may have had an impact on the present failure to replicate the original study. The original study did not include any these plots but reported an average score on the political measure of 4.38 with a standard deviation of 1.66. This suggests that the original study used either a more moderate or a more politically diverse sample than the present study. 
+
+Another possible explaination for the present failure to replicate was proposed by the original author. She suggested that "all the dependent variables across all studies reference to refugee policies that were just announced/top of mind in news media and widely debated", which may impact the current study. When the original study was conducted, immigration was a salient issue in the U.S media, whereas, at the time of the present study, other issues have moved into the media spotlight. The impact of the news media cycle may also serve to explain the present failure to replicate.
+
+Aside from the concerns about the impact of media coverage, the original authors did not raise any objections or challenges about the present replication attempt. 
